@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=docker
+    networks:
+      - docker101
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5430:5432"  
+  
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8080
+      - DB_HOST=database
+    depends_on:
+      - database
+    networks:
+      - docker101
+    ports:
+      - "8080:8080"
+    
+
+volumes:
+  db_data:
+
+networks:
+  docker101:
